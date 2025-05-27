@@ -1,0 +1,295 @@
+switchtolayout; deleteall;clc;clear;
+
+# Waveguides documentations:
+#     1. https://optics.ansys.com/hc/en-us/articles/360034404754-addwaveguide-Script-command
+
+# Global params:
+longitudinal_length = 20e-6; # default? 20e-6;
+transversal_width = 8.0e-6;
+thickness = 2.5e-6;
+wg_angle = 90;
+wg_height = 220e-9;
+wg_width = 500e-9;
+Lc = 10e-6;
+injection_mode = 1;
+wavelength = 1.56e-6;
+num_freq_points = 1;
+wavelength_span = 0;
+gap = 95.0e-9;
+deltinha = 1e-9; # pequena distância de segurança pra colocar as portas de entrada e monitores.
+## S-bend params:
+s_bend_xspan = 5e-6;
+s_bend_yspan = 2.5e-6;
+
+# WG1
+## Coupling region:
+### Parameters:
+width_wg1 = wg_width;
+height_wg1 = wg_height;
+angle_wg1 = wg_angle;
+xi_main_wg = -Lc/2;
+xf_main_wg = Lc/2;
+yi_main_wg = -gap/2 - width_wg1/2;
+yf_main_wg = -gap/2 - width_wg1/2;
+pole_coupling_region_wg1 = [xi_main_wg,yi_main_wg; xf_main_wg,yf_main_wg];
+## Build:
+addwaveguide;
+set("base width", width_wg1);
+set("base height", height_wg1);
+set("base angle", angle_wg1);
+set("poles", pole_coupling_region_wg1);
+set("material","Si (Silicon) - Palik");
+set("name", "bus-waveguide");
+## S-bend IN
+#### General Parameters: 
+s_bend_width = wg_width;
+s_bend_height = wg_height;
+s_bend_angle = wg_angle;
+#### Parameters
+    s_bend_xi = -Lc/2-s_bend_xspan;
+    s_bend_yi = -s_bend_yspan - gap/2 - wg_width/2;
+#### Build
+    addwaveguide;
+        set("base width", s_bend_width);
+        set("base height", s_bend_height);
+        set("base angle", s_bend_angle);
+        s_bend_pole = [
+            s_bend_xi, s_bend_yi; 
+            s_bend_xi+s_bend_xspan/2.0, s_bend_yi; 
+            s_bend_xi+s_bend_xspan/2.0, s_bend_yi+s_bend_yspan; 
+            s_bend_xi+s_bend_xspan, s_bend_yi+s_bend_yspan]; # padrao do lumerical para s-bend;
+        set("poles", s_bend_pole);
+        set("material","Si (Silicon) - Palik");
+        set("name", "s-bend");
+## S-bend OUT
+#### General Parameters: 
+s_bend_width = wg_width;
+s_bend_height = wg_height;
+s_bend_angle = wg_angle;
+#### Parameters
+    s_bend_xi = Lc/2;
+    s_bend_yi = -gap/2 - wg_width/2;
+#### Build
+    addwaveguide;
+        set("base width", s_bend_width);
+        set("base height", s_bend_height);
+        set("base angle", s_bend_angle);
+        s_bend_pole = [
+            s_bend_xi, s_bend_yi; 
+            s_bend_xi+s_bend_xspan/2.0, s_bend_yi; 
+            s_bend_xi+s_bend_xspan/2.0, s_bend_yi-s_bend_yspan; 
+            s_bend_xi+s_bend_xspan, s_bend_yi-s_bend_yspan]; # padrao do lumerical para s-bend;
+        set("poles", s_bend_pole);
+        set("material","Si (Silicon) - Palik");
+        set("name", "s-bend");
+
+# WG2
+## Coupling region:
+### Parameters:
+width_wg1 = wg_width;
+height_wg1 = wg_height;
+angle_wg1 = wg_angle;
+xi_main_wg = -Lc/2;
+xf_main_wg = Lc/2;
+yi_main_wg = gap/2 + width_wg1/2;
+yf_main_wg = gap/2 + width_wg1/2;
+pole_coupling_region_wg1 = [xi_main_wg,yi_main_wg; xf_main_wg,yf_main_wg];
+## Build:
+addwaveguide;
+set("base width", width_wg1);
+set("base height", height_wg1);
+set("base angle", angle_wg1);
+set("poles", pole_coupling_region_wg1);
+set("material","Si (Silicon) - Palik");
+set("name", "bus-waveguide");
+## S-bend IN
+#### General Parameters: 
+s_bend_width = wg_width;
+s_bend_height = wg_height;
+s_bend_angle = wg_angle;
+#### Parameters
+    s_bend_xi = -Lc/2-s_bend_xspan;
+    s_bend_yi = s_bend_yspan + gap/2 + wg_width/2;
+#### Build
+    addwaveguide;
+        set("base width", s_bend_width);
+        set("base height", s_bend_height);
+        set("base angle", s_bend_angle);
+        s_bend_pole = [
+            s_bend_xi, s_bend_yi; 
+            s_bend_xi+s_bend_xspan/2.0, s_bend_yi; 
+            s_bend_xi+s_bend_xspan/2.0, s_bend_yi-s_bend_yspan; 
+            s_bend_xi+s_bend_xspan, s_bend_yi-s_bend_yspan]; # padrao do lumerical para s-bend;
+        set("poles", s_bend_pole);
+        set("material","Si (Silicon) - Palik");
+        set("name", "s-bend");
+## S-bend OUT
+#### General Parameters: 
+s_bend_width = wg_width;
+s_bend_height = wg_height;
+s_bend_angle = wg_angle;
+#### Parameters
+    s_bend_xi = Lc/2;
+    s_bend_yi = gap/2 + wg_width/2;
+#### Build
+    addwaveguide;
+        set("base width", s_bend_width);
+        set("base height", s_bend_height);
+        set("base angle", s_bend_angle);
+        s_bend_pole = [
+            s_bend_xi, s_bend_yi; 
+            s_bend_xi+s_bend_xspan/2.0, s_bend_yi; 
+            s_bend_xi+s_bend_xspan/2.0, s_bend_yi+s_bend_yspan; 
+            s_bend_xi+s_bend_xspan, s_bend_yi+s_bend_yspan]; # padrao do lumerical para s-bend;
+        set("poles", s_bend_pole);
+        set("material","Si (Silicon) - Palik");
+        set("name", "s-bend");
+
+
+
+# Cladding
+## Parameters
+substrate_xspan = longitudinal_length;
+substrate_yspan = transversal_width;
+substrate_zspan = thickness;
+## Build
+addrect;
+    set("X MIN", -substrate_xspan/2);
+    set("X MAX", substrate_xspan/2);
+    set("Y MIN", -substrate_yspan/2);
+    set("Y MAX", substrate_yspan/2);
+    set("Z MIN", -substrate_zspan/2);
+    set("Z MAX", substrate_zspan/2);
+    set("material", "SiO2 (Glass) - Palik");
+    set("name", "cladding");
+    set("alpha", 0.5);
+    set("override mesh order from material database", 1);
+    set("mesh order", 3);
+
+
+# 3D FDTD:
+addfdtd;
+    set("dimension", 1); # should be 2 for 3D!
+    set("X MIN", -substrate_xspan/2);
+    set("X MAX", substrate_xspan/2);
+    set("Y MIN", -substrate_yspan/2);
+    set("Y MAX", substrate_yspan/2);
+    set("Z", 0);
+    # set("Z MIN", -substrate_zspan/2); # uncomment for 3D!
+    # set("Z MAX", substrate_zspan/2);  # uncomment for 3D!
+    set("x min bc", "PML");
+    set("x max bc", "PML");
+    set("y min bc", "PML");
+    set("y max bc", "PML");
+    # set("z min bc", "PML");  # uncomment for 3D!
+    # set("z max bc", "PML");  # uncomment for 3D!
+    # set("simulation time", 5000e-15);
+    set("mesh accuracy", 1);
+
+addport;
+set("name", "input_port");
+set("injection axis", "x");
+set("direction", "forward");
+set("mode selection", 1); 
+set("x", deltinha - substrate_xspan/2); # Near x-min
+set("y", -yi_main_wg -s_bend_yspan);
+set("y span", 3.5*wg_width);
+set("z", 0);
+# set("z span", 5*wg_height); # uncomment for 3D!
+# by default should be the fundamental mode.
+
+addpower; # Z-slice
+set("name","Z-slice");
+set("monitor type","2D Z-normal");
+set("X MIN", -substrate_xspan/2);
+set("X MAX", substrate_xspan/2);
+set("Y MIN", -substrate_yspan/2);
+set("Y MAX", substrate_yspan/2);
+set("z", 0);
+
+
+select("FDTD::ports"); # select the port group
+set("source port", "input_port");
+set("source mode", "mode 1");
+set("monitor frequency points", num_freq_points);
+
+
+addprofile;
+set("name", "xy_monitor");
+set("monitor type", "2D Z-normal");
+set("X MIN", -substrate_xspan/2);
+set("X MAX", substrate_xspan/2);
+set("Y MIN", -substrate_yspan/2);
+set("Y MAX", substrate_yspan/2);
+    
+    
+setglobalsource("center wavelength", wavelength);
+setglobalsource("wavelength span", wavelength_span);
+    
+    
+run;
+
+#addvarfdtd;
+# set("dimension", "2.5D");
+#set("X MIN", -substrate_xspan/2);
+#set("X MAX", substrate_xspan/2);
+#set("Y MIN", -substrate_yspan/2);
+#set("Y MAX", substrate_yspan/2);
+#set("Z MIN", -1e-9);
+#set("Z MAX", 1e-9);
+#set("Z", 0);
+#set("z span", substrate_zspan);
+#setnamed("varFDTD", "simulation time", 50000e-15);  # 5000 fs
+#set("mesh accuracy", 2);
+
+#addfde;
+#set("X", deltinha - substrate_xspan/2);
+#set("Y MIN", -yi_main_wg -s_bend_yspan -4*wg_width);
+#set("Y MAX", -yi_main_wg -s_bend_yspan +4*wg_width);
+#set("Z", 0);
+#set("wavelength", wavelength);
+#set("number of trial modes", 4);  # Look for 4 modes, adjust as needed
+#set("use max index", true);       # Helps find fundamental mode
+#set("solver type", "2D X normal");
+
+#addmodesource;
+#set("X", deltinha - substrate_xspan/2);
+#set("Y MIN", -yi_main_wg -s_bend_yspan -4*wg_width);
+#set("Y MAX", -yi_main_wg -s_bend_yspan +4*wg_width);
+# set("Z", 0);
+#setnamed("source", "injection axis", "x");  # propagation direction
+#setnamed("source", "mode selection", "fundamental mode");
+#setnamed("source", "wavelength start", 1.56e-6);
+#setnamed("source", "wavelength stop", 1.56e-6);
+
+#addprofile;
+#set("name", "xy_monitor");
+#set("monitor type", "2D X-normal");
+#set("x", 0);
+#set("x span", substrate_xspan);
+#set("y span", substrate_yspan);
+#set("y", 0);
+#set("wavelength start", 1.56e-6);
+#set("wavelength stop", 1.56e-6);
+
+# setnamed("varFDTD", "active", true);
+#addpower;
+#set("monitor type", "2D X-normal");
+#set("X", substrate_xspan/2 - deltinha);
+#set("y span", yi_main_wg);
+#set("z", 0);
+#set("name", "output-self");
+
+# setnamed("varFDTD", "active", true);
+#addpower;
+#set("monitor type", "2D X-normal");
+#set("x", substrate_xspan/2 - deltinha);
+#set("y span", -yi_main_wg);
+#set("z", 0);
+#set("name", "output-cross");
+
+#run;
+
+# Plot transmission
+#transmitted_power = getresult("output-self", "T");
+#?transmitted_power;
